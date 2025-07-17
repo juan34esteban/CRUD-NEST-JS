@@ -4,23 +4,25 @@ import { ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
-
-
-  app.useGlobalPipes(new ValidationPipe()); 
-
+  // const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-   const config = new DocumentBuilder()
-    .setTitle('Mi BOLSILLO')
-    .setDescription('API para la gestión de Mi Bolsillo.')
+  app.setGlobalPrefix('/api');
+
+  const config = new DocumentBuilder()
+    .setTitle('CRUD')
+    .setDescription('API CRUD.')
     .setVersion('1.0')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document); 
-    await app.listen(process.env.PORT ?? 3000);
+  SwaggerModule.setup('api/docs', app, document);
+
+  await app.listen(3000);
 
 }
 bootstrap();
